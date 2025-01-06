@@ -14,7 +14,7 @@ import {
 } from '../../context/people/PeopleContext';
 import { Person } from '@/types/people';
 import { usePeople } from '../../hooks/usePeople';
-import { AddPersonModal } from '../../components/people/AddPersonModal';
+import { PersonFormModal } from '../../components/people/PersonFormModal';
 import { DeletePersonModal } from '../../components/people/DeletePersonModal';
 
 type Column = {
@@ -24,14 +24,8 @@ type Column = {
 
 const PeoplePage: React.FC = () => {
   const { people: peopleFromHook, isLoading, error, fetchPeople } = usePeople();
-  const {
-    people,
-    selectedPerson,
-    setPeople,
-    setModalType,
-    setSelectedPerson,
-    setIsModalOpen,
-  } = usePeopleContext();
+  const { people, setPeople, setModalType, setSelectedPerson, setIsModalOpen } =
+    usePeopleContext();
 
   useEffect(() => {
     fetchPeople();
@@ -57,6 +51,7 @@ const PeoplePage: React.FC = () => {
   const handleEdit = (person: Person): void => {
     setModalType('edit');
     setSelectedPerson(person);
+    setIsModalOpen(true);
   };
 
   const handleAddPerson = (): void => {
@@ -120,7 +115,7 @@ const PeoplePage: React.FC = () => {
         </TableBody>
       </Table>
       <DeletePersonModal />
-      <AddPersonModal />
+      <PersonFormModal />
     </div>
   );
 };

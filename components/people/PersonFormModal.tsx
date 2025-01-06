@@ -12,10 +12,17 @@ import { usePeopleContext } from '../../context/people/PeopleContext';
 import { usePeople } from '../../hooks/usePeople';
 import { Person } from '../../types/people';
 
-export const AddPersonModal: React.FC = () => {
-  const { isModalOpen, setIsModalOpen, modalType, setPeople } =
+export const PersonFormModal: React.FC = () => {
+  const { isModalOpen, setIsModalOpen, modalType, setPeople, selectedPerson } =
     usePeopleContext();
-  const { addPerson, isLoading, fetchPeople, people } = usePeople();
+  const {
+    addPerson,
+    editPerson,
+    isLoading,
+    fetchPeople,
+    people,
+    getPersonById,
+  } = usePeople();
   const [formData, setFormData] = React.useState<Omit<Person, 'id'>>({
     first_name: '',
     last_name: '',
@@ -31,14 +38,53 @@ export const AddPersonModal: React.FC = () => {
     }
   }, [people, setPeople]);
 
+  useEffect(() => {
+    const loadPerson = async () => {
+      if (modalType === 'edit' && selectedPerson?.id) {
+        try {
+          const person = await getPersonById(selectedPerson.id);
+          console.log('person', person);
+          if (person) {
+            setFormData({
+              first_name: person.first_name,
+              last_name: person.last_name,
+              email: person.email,
+              phone: person.phone,
+              birthdate: person.birthdate,
+              address: person.address,
+            });
+          }
+        } catch (error) {
+          console.error('Error al cargar persona:', error);
+        }
+      }
+    };
+
+    if (modalType === 'add') {
+      setFormData({
+        first_name: '',
+        last_name: '',
+        email: '',
+        phone: '',
+        birthdate: '',
+        address: '',
+      });
+    } else {
+      loadPerson();
+    }
+  }, [modalType, selectedPerson, getPersonById]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await addPerson(formData);
-      //
+      if (modalType === 'edit' && selectedPerson?.id) {
+        await editPerson(selectedPerson.id, formData);
+      } else {
+        await addPerson(formData);
+      }
       handleClose();
     } catch (error) {
-      console.error('Error al crear persona:', error);
+      console.error('Error al procesar persona:', error);
     }
   };
 
@@ -65,13 +111,15 @@ export const AddPersonModal: React.FC = () => {
 
   return (
     <Modal
-      isOpen={isModalOpen && modalType === 'add'}
+      isOpen={isModalOpen && (modalType === 'add' || modalType === 'edit')}
       onClose={handleClose}
       placement="center"
     >
       <ModalContent>
-        <form onSubmit={handleSubmit} data-testid="add-person-form">
-          <ModalHeader>Agregar Persona</ModalHeader>
+        <form onSubmit={handleSubmit} data-testid="person-form">
+          <ModalHeader>
+            {modalType === 'add' ? 'Agregar Persona' : 'Editar Persona'}
+          </ModalHeader>
           <ModalBody>
             <div className="space-y-4">
               <Input

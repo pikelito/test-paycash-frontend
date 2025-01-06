@@ -2,7 +2,9 @@ import { useState, useCallback } from 'react';
 import { Person, UsePeopleReturn } from '@/types/people';
 import {
   getPeople,
+  getPerson,
   createPerson,
+  updatePerson,
   deletePerson,
 } from '../services/peopleService';
 
@@ -60,6 +62,43 @@ export const usePeople = (): UsePeopleReturn => {
     }
   };
 
+  const getPersonById = useCallback(async (id: number) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      console.log('id', id);
+      const data = await getPerson(id);
+      console.log('data', data);
+      return data;
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : 'Error al obtener la persona'
+      );
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const editPerson = useCallback(
+    async (id: number, person: Omit<Person, 'id'>) => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        await updatePerson(id, person);
+        await fetchPeople();
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : 'Error al actualizar la persona'
+        );
+        throw err;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [fetchPeople]
+  );
+
   return {
     people,
     isLoading,
@@ -67,5 +106,7 @@ export const usePeople = (): UsePeopleReturn => {
     fetchPeople,
     addPerson,
     removePerson,
+    getPersonById,
+    editPerson,
   };
 };

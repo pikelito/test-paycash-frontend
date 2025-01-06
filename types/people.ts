@@ -28,4 +28,6 @@ export interface UsePeopleReturn {
   fetchPeople: () => Promise<void>;
   addPerson: (person: Omit<Person, 'id'>) => Promise<void>;
   removePerson: (id: number) => Promise<void>;
+  getPersonById: (id: number) => Promise<Person | null>;
+  editPerson: (id: number, person: Omit<Person, 'id'>) => Promise<void>;
 }

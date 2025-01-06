@@ -15,6 +15,18 @@ export const getPeople = async (): Promise<Person[]> => {
   return data;
 };
 
+export const getPerson = async (id: number): Promise<Person> => {
+  const response = await fetch(`${API_URL}/people/${id}`);
+
+  if (!response.ok) {
+    throw new Error(
+      `Error fetching person: ${response.status} ${response.statusText}`
+    );
+  }
+
+  return await response.json();
+};
+
 export const createPerson = async (
   person: Omit<Person, 'id'>
 ): Promise<Person> => {
@@ -29,6 +41,27 @@ export const createPerson = async (
   if (!response.ok) {
     throw new Error(
       `Error creating person: ${response.status} ${response.statusText}`
+    );
+  }
+
+  return response.json();
+};
+
+export const updatePerson = async (
+  id: number,
+  person: Omit<Person, 'id'>
+): Promise<Person> => {
+  const response = await fetch(`${API_URL}/people/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(person),
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `Error updating person: ${response.status} ${response.statusText}`
     );
   }
 
