@@ -1,6 +1,10 @@
 import { useState, useCallback } from 'react';
 import { Person, UsePeopleReturn } from '@/types/people';
-import { getPeople, createPerson } from '../services/peopleService';
+import {
+  getPeople,
+  createPerson,
+  deletePerson,
+} from '../services/peopleService';
 
 export const usePeople = (): UsePeopleReturn => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -41,11 +45,27 @@ export const usePeople = (): UsePeopleReturn => {
     [fetchPeople]
   );
 
+  const removePerson = async (id: number) => {
+    setIsLoading(true);
+    try {
+      await deletePerson(id);
+      setError(null);
+    } catch (error) {
+      setError(
+        error instanceof Error ? error.message : 'Error deleting person'
+      );
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return {
     people,
     isLoading,
     error,
     fetchPeople,
     addPerson,
+    removePerson,
   };
 };

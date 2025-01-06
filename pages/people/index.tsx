@@ -15,6 +15,8 @@ import {
 import { Person } from '@/types/people';
 import { usePeople } from '../../hooks/usePeople';
 import { AddPersonModal } from '../../components/people/AddPersonModal';
+import { DeletePersonModal } from '../../components/people/DeletePersonModal';
+
 type Column = {
   key: 'firstName' | 'lastName' | 'email' | 'phone' | 'actions';
   label: string;
@@ -22,8 +24,14 @@ type Column = {
 
 const PeoplePage: React.FC = () => {
   const { people: peopleFromHook, isLoading, error, fetchPeople } = usePeople();
-  const { people, setPeople, setModalType, setSelectedPerson, setIsModalOpen } =
-    usePeopleContext();
+  const {
+    people,
+    selectedPerson,
+    setPeople,
+    setModalType,
+    setSelectedPerson,
+    setIsModalOpen,
+  } = usePeopleContext();
 
   useEffect(() => {
     fetchPeople();
@@ -53,6 +61,12 @@ const PeoplePage: React.FC = () => {
 
   const handleAddPerson = (): void => {
     setModalType('add');
+    setIsModalOpen(true);
+  };
+
+  const handleDelete = (person: Person) => {
+    setSelectedPerson(person);
+    setModalType('delete');
     setIsModalOpen(true);
   };
 
@@ -92,7 +106,11 @@ const PeoplePage: React.FC = () => {
                   >
                     Editar
                   </Button>
-                  <Button size="sm" color="danger">
+                  <Button
+                    size="sm"
+                    color="danger"
+                    onClick={() => handleDelete(person)}
+                  >
                     Eliminar
                   </Button>
                 </div>
@@ -101,7 +119,7 @@ const PeoplePage: React.FC = () => {
           ))}
         </TableBody>
       </Table>
-
+      <DeletePersonModal />
       <AddPersonModal />
     </div>
   );

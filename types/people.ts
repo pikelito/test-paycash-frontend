@@ -27,4 +27,5 @@ export interface UsePeopleReturn {
   error: string | null;
   fetchPeople: () => Promise<void>;
   addPerson: (person: Omit<Person, 'id'>) => Promise<void>;
+  removePerson: (id: number) => Promise<void>;
 }

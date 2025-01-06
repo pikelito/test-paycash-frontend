@@ -34,3 +34,15 @@ export const createPerson = async (
 
   return response.json();
 };
+
+export const deletePerson = async (id: number): Promise<void> => {
+  const response = await fetch(`${API_URL}/people/${id}`, {
+    method: 'DELETE',
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `Error deleting person: ${response.status} ${response.statusText}`
+    );
+  }
+};
