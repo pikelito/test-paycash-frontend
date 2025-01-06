@@ -2,10 +2,10 @@ export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
   name: 'Paycash',
-  description: 'Test Miguel Mariño paycash',
+  description: 'Test Miguel Mariño',
   navItems: [
     {
-      label: 'People',
+      label: 'Gestión de personas',
       href: '/people',
     },
   ],
