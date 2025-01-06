@@ -20,3 +20,10 @@ export interface PeopleContextType {
   selectedPerson: Person | null;
   setSelectedPerson: (person: Person | null) => void;
 }
+
+export interface UsePeopleReturn {
+  people: Person[];
+  isLoading: boolean;
+  error: string | null;
+  fetchPeople: () => Promise<void>;
+}
