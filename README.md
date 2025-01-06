@@ -1,55 +1,75 @@
-# Next.js & NextUI Template
+# Frontend Test PayCash
 
-This is a template for creating applications using Next.js 14 (pages directory) and NextUI (v2).
+Frontend desarrollado con Next.js para la gestión de personas.
 
-[Try it on CodeSandbox](https://githubbox.com/nextui-org/next-pages-template)
+## Requisitos Previos
 
->Note: Since Next.js 14, the pages router is recommend migrating to the [new App Router](https://nextjs.org/docs/app) to leverage React's latest features
->
->Read more: [Pages Router](https://nextjs.org/docs/pages)
+- Docker Desktop instalado y ejecutándose
+- Docker Compose
 
-## Technologies Used
+## Instalación con Docker
 
-- [Next.js 14](https://nextjs.org/docs/getting-started)
-- [NextUI](https://nextui.org)
-- [Tailwind CSS](https://tailwindcss.com)
-- [Tailwind Variants](https://tailwind-variants.org)
-- [TypeScript](https://www.typescriptlang.org)
-- [Framer Motion](https://www.framer.com/motion)
-- [next-themes](https://github.com/pacocoursey/next-themes)
+1. **Clonar el repositorio:**
 
-## How to Use
+   ```bash
+   git clone https://github.com/pikelito/test-paycash-frontend
+   cd test-paycash-frontend
+   ```
 
-To create a new project based on this template using `create-next-app`, run the following command:
+2. **Construir e iniciar los contenedores:**
 
-```bash
-npx create-next-app -e https://github.com/nextui-org/next-pages-template
-```
+   ```bash
+   docker-compose up -d --build
+   ```
 
-### Install dependencies
+## Tecnologías Principales
 
-You can use one of them `npm`, `yarn`, `pnpm`, `bun`, Example using `npm`:
+- Next.js 14
+- React 20
+- TypeScript
+- NextUI
+- TailwindCSS
+- Vitest para testing
 
-```bash
-npm install
-```
+## Comandos Docker útiles
 
-### Run the development server
+- **Iniciar los contenedores:**
 
-```bash
-npm run dev
-```
+  ```bash
+  docker-compose up -d
+  ```
 
-### Setup pnpm (optional)
+- **Detener los contenedores:**
 
-If you are using `pnpm`, you need to add the following code to your `.npmrc` file:
+  ```bash
+  docker-compose down
+  ```
 
-```bash
-public-hoist-pattern[]=*@nextui-org/*
-```
+- **Ver logs:**
 
-After modifying the `.npmrc` file, you need to run `pnpm install` again to ensure that the dependencies are installed correctly.
+  ```bash
+  docker-compose logs -f frontend
+  ```
 
-## License
+- **Ejecutar comandos dentro del contenedor:**
 
-Licensed under the [MIT license](https://github.com/nextui-org/next-pages-template/blob/main/LICENSE).
+  ```bash
+  docker-compose exec frontend npm run test
+  docker-compose exec frontend npm run lint
+  ```
+
+- **Reconstruir la imagen:**
+  ```bash
+  docker-compose build frontend
+  ```
+
+## Acceso a la aplicación
+
+- **Desarrollo:** [http://localhost:3000](http://localhost:3000)
+
+## Notas
+
+- Asegúrate que Docker Desktop esté ejecutándose antes de iniciar el proyecto
+- El contenedor del frontend se conectará automáticamente con el backend en el puerto 8000
+- Los cambios en el código se reflejarán automáticamente gracias al hot-reloading
+- Para problemas de permisos en Linux/MacOS, puede ser necesario ajustar los permisos de los volúmenes
