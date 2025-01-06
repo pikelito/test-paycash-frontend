@@ -40,6 +40,7 @@ const mockSetModalType = vi.fn();
 const mockSetSelectedPerson = vi.fn();
 
 vi.mock('../../context/people/PeopleContext', () => ({
+  PeopleProvider: ({ children }: { children: React.ReactNode }) => children,
   usePeopleContext: () => ({
     people: mockPeople,
     setPeople: vi.fn(),
