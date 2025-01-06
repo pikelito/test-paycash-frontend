@@ -26,4 +26,5 @@ export interface UsePeopleReturn {
   isLoading: boolean;
   error: string | null;
   fetchPeople: () => Promise<void>;
+  addPerson: (person: Omit<Person, 'id'>) => Promise<void>;
 }

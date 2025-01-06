@@ -14,7 +14,7 @@ import {
 } from '../../context/people/PeopleContext';
 import { Person } from '@/types/people';
 import { usePeople } from '../../hooks/usePeople';
-
+import { AddPersonModal } from '../../components/people/AddPersonModal';
 type Column = {
   key: 'firstName' | 'lastName' | 'email' | 'phone' | 'actions';
   label: string;
@@ -22,7 +22,7 @@ type Column = {
 
 const PeoplePage: React.FC = () => {
   const { people: peopleFromHook, isLoading, error, fetchPeople } = usePeople();
-  const { people, setPeople, setModalType, setSelectedPerson } =
+  const { people, setPeople, setModalType, setSelectedPerson, setIsModalOpen } =
     usePeopleContext();
 
   useEffect(() => {
@@ -51,11 +51,18 @@ const PeoplePage: React.FC = () => {
     setSelectedPerson(person);
   };
 
+  const handleAddPerson = (): void => {
+    setModalType('add');
+    setIsModalOpen(true);
+  };
+
   return (
     <div className="container mx-auto p-4">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Gestión de Personas</h1>
-        <Button color="primary">Agregar Persona</Button>
+        <Button color="primary" onClick={handleAddPerson}>
+          Agregar Persona
+        </Button>
       </div>
 
       <Table
@@ -94,6 +101,8 @@ const PeoplePage: React.FC = () => {
           ))}
         </TableBody>
       </Table>
+
+      <AddPersonModal />
     </div>
   );
 };

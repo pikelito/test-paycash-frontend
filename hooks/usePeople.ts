@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { Person, UsePeopleReturn } from '@/types/people';
-import { getPeople } from '../services/peopleService';
+import { getPeople, createPerson } from '../services/peopleService';
 
 export const usePeople = (): UsePeopleReturn => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -22,10 +22,30 @@ export const usePeople = (): UsePeopleReturn => {
     }
   }, []);
 
+  const addPerson = useCallback(
+    async (person: Omit<Person, 'id'>) => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        await createPerson(person);
+        await fetchPeople();
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : 'Error al crear la persona'
+        );
+        throw err;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [fetchPeople]
+  );
+
   return {
     people,
     isLoading,
     error,
     fetchPeople,
+    addPerson,
   };
 };

@@ -1,5 +1,10 @@
 import React from 'react';
-import { render, screen, RenderOptions } from '@testing-library/react';
+import {
+  render,
+  screen,
+  RenderOptions,
+  fireEvent,
+} from '@testing-library/react';
 import { NextUIProvider } from '@nextui-org/react';
 import { ReactNode } from 'react';
 import People from './index';
@@ -38,6 +43,7 @@ const mockPeople: Person[] = [
 
 const mockSetModalType = vi.fn();
 const mockSetSelectedPerson = vi.fn();
+const mockSetIsModalOpen = vi.fn();
 
 vi.mock('../../context/people/PeopleContext', () => ({
   PeopleProvider: ({ children }: { children: React.ReactNode }) => children,
@@ -45,7 +51,7 @@ vi.mock('../../context/people/PeopleContext', () => ({
     people: mockPeople,
     setPeople: vi.fn(),
     isModalOpen: false,
-    setIsModalOpen: vi.fn(),
+    setIsModalOpen: mockSetIsModalOpen,
     modalType: null as 'add' | 'edit' | 'delete' | null,
     setModalType: mockSetModalType,
     selectedPerson: null,
@@ -122,6 +128,16 @@ describe('People Page', () => {
   it('should render the add person button', () => {
     customRender(<People />);
     expect(screen.getByText('Agregar Persona')).toBeInTheDocument();
+  });
+
+  it('opens add modal when clicking add button', () => {
+    render(<People />, { wrapper: AllTheProviders });
+
+    const addButton = screen.getByText('Agregar Persona');
+    fireEvent.click(addButton);
+
+    expect(mockSetModalType).toHaveBeenCalledWith('add');
+    expect(mockSetIsModalOpen).toHaveBeenCalledWith(true);
   });
 });
 
