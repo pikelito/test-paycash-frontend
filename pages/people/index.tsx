@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Table,
   TableHeader,
@@ -13,11 +13,32 @@ import {
   usePeopleContext,
 } from '../../context/people/PeopleContext';
 import { Person } from '@/types/people';
+import { usePeople } from '../../hooks/usePeople';
 
-const PeoplePage = () => {
-  const { people, setModalType, setSelectedPerson } = usePeopleContext();
+type Column = {
+  key: 'firstName' | 'lastName' | 'email' | 'phone' | 'actions';
+  label: string;
+};
 
-  const columns = [
+const PeoplePage: React.FC = () => {
+  const { people: peopleFromHook, isLoading, error, fetchPeople } = usePeople();
+  const { people, setPeople, setModalType, setSelectedPerson } =
+    usePeopleContext();
+
+  useEffect(() => {
+    fetchPeople();
+  }, [fetchPeople]);
+
+  useEffect(() => {
+    if (peopleFromHook) {
+      setPeople(peopleFromHook);
+    }
+  }, [peopleFromHook, setPeople]);
+
+  if (isLoading) return <div>Cargando...</div>;
+  if (error) return <div>Error: {error}</div>;
+
+  const columns: readonly Column[] = [
     { key: 'firstName', label: 'Nombre' },
     { key: 'lastName', label: 'Apellido' },
     { key: 'email', label: 'Email' },
@@ -25,7 +46,7 @@ const PeoplePage = () => {
     { key: 'actions', label: 'Acciones' },
   ] as const;
 
-  const handleEdit = (person: Person) => {
+  const handleEdit = (person: Person): void => {
     setModalType('edit');
     setSelectedPerson(person);
   };
@@ -49,7 +70,7 @@ const PeoplePage = () => {
           ))}
         </TableHeader>
         <TableBody emptyContent={'No hay datos'}>
-          {people.map((person) => (
+          {people.map((person: Person) => (
             <TableRow key={person.id}>
               <TableCell>{person.first_name}</TableCell>
               <TableCell>{person.last_name}</TableCell>

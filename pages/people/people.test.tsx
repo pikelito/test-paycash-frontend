@@ -53,6 +53,12 @@ vi.mock('../../context/people/PeopleContext', () => ({
   }),
 }));
 
+const mockUsePeople = vi.fn();
+
+vi.mock('../../hooks/usePeople', () => ({
+  usePeople: () => mockUsePeople(),
+}));
+
 const AllTheProviders = ({ children }: { children: ReactNode }) => {
   return <NextUIProvider>{children}</NextUIProvider>;
 };
@@ -67,7 +73,39 @@ describe('People Page', () => {
     vi.clearAllMocks();
   });
 
+  it('should render loading state', () => {
+    mockUsePeople.mockReturnValue({
+      people: [],
+      isLoading: true,
+      error: null,
+      fetchPeople: vi.fn(),
+    });
+
+    render(<People />, { wrapper: AllTheProviders });
+    expect(screen.getByText('Cargando...')).toBeInTheDocument();
+  });
+
+  it('should render error state', () => {
+    mockUsePeople.mockReturnValue({
+      people: [],
+      isLoading: false,
+      error: 'Error al cargar personas',
+      fetchPeople: vi.fn(),
+    });
+
+    render(<People />, { wrapper: AllTheProviders });
+    expect(
+      screen.getByText('Error: Error al cargar personas')
+    ).toBeInTheDocument();
+  });
+
   it('should render the page title', () => {
+    mockUsePeople.mockReturnValue({
+      people: mockPeople,
+      isLoading: false,
+      error: null,
+      fetchPeople: vi.fn(),
+    });
     customRender(<People />);
     expect(screen.getByText('Gestión de Personas')).toBeInTheDocument();
   });
