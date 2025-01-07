@@ -1,5 +1,7 @@
 # Frontend Test PayCash
 
+link de url desplegada en amplify: https://main.d3ve0w7jvdyrdb.amplifyapp.com
+
 Frontend desarrollado con Next.js para la gestión de personas.
 
 ## Requisitos Previos
