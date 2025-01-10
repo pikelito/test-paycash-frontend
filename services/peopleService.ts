@@ -1,7 +1,7 @@
 import { Person } from '@/types/people';
 
 const API_URL =
-  'https://f149udqwbb.execute-api.us-east-2.amazonaws.com/prod/api';
+  'https://k6yxy5gbs5.execute-api.us-east-2.amazonaws.com/prod/api';
 
 export const getPeople = async (): Promise<Person[]> => {
   const response = await fetch(`${API_URL}/people`);
